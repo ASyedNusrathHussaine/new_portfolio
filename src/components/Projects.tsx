@@ -1,10 +1,13 @@
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink, Github, MoreHorizontal } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 function Projects() {
+  const [openMenu, setOpenMenu] = useState<number | null>(null);
+
   const projects = [
     {
       title: 'Supermarket Management System',
-      tag: 'College Project',
+      tag: 'deleCollege Project',
       description: 'Built a modern grocery web application with customer and admin dashboards. Implemented cart handling and order workflows with a clean UI.',
         liveDemo: 'https://spms-lac.vercel.app/',
         github: 'https://github.com/SyedNusrath07/SPMS.git',
@@ -16,16 +19,17 @@ function Projects() {
       technologies: ['React', 'Context API', 'Tailwind CSS'],
     },
     {
-      title: 'Personal Portfolio',
+      title: 'BirdFlight Game',
       tag: 'Personal Project',
-      description:
-        "This portfolio website (the current project) showcases skills, projects, and contact information. Built with React, TypeScript, Vite and Tailwind CSS with a focus on accessibility and responsive design.",
+      description: 'Created a gesture-based mobile game using React Native and TypeScript. Implemented real-time scoring, animated environments, and haptic feedback.',
+      liveDemo: 'https://birdflight.netlify.app/',
+      github: 'https://github.com/ASyedNusrathHussaine/birdflight.git',
       features: [
-        'Responsive layout with Hero, Projects, Skills, Education, and Contact sections',
-        'Reusable React components and Tailwind utility classes',
-        'TypeScript types and Vite for fast development and build',
+        'Gesture-based controls for mobile interaction',
+        'Real-time scoring system',
+        'Animated environments and haptic feedback',
       ],
-      technologies: ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
+      technologies: ['React Native', 'TypeScript'],
     },
     {
       title: 'Dr.AI | AI-Powered Medical Symptom Analysis',
@@ -43,14 +47,34 @@ function Projects() {
     }
   ];
 
+  useEffect(() => {
+    function onDocClick(e: MouseEvent | TouchEvent) {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-menu-id]') && !target.closest('[data-menu-toggle]')) {
+        setOpenMenu(null);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpenMenu(null);
+    }
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('touchstart', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('touchstart', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, []);
+
   return (
     <section id="projects" className="bg-white py-20">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-gray-900 mb-12">Projects</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-6 hover:border-slate-400 transition-colors">
-              <div className="mb-4">
+            <div key={index} className="relative border border-gray-200 rounded-lg p-6 hover:border-slate-400 transition-colors">
+              <div className="mb-4 flex items-start justify-between gap-4">
                 <span className={`inline-block text-xs font-medium px-3 py-1 rounded-full ${
                   project.tag === 'Main College Project'
                     ? 'bg-blue-100 text-blue-800'
@@ -58,7 +82,53 @@ function Projects() {
                 }`}>
                   {project.tag}
                 </span>
+
+                {/* Three-dot overflow menu */}
+                <div className="relative" data-menu-id={index}>
+                  <button
+                    aria-haspopup="true"
+                    aria-expanded={openMenu === index}
+                    data-menu-toggle
+                    onClick={() => setOpenMenu(openMenu === index ? null : index)}
+                    className="p-2 rounded-md hover:bg-gray-100 text-gray-700 focus:outline-none focus:ring"
+                  >
+                    <MoreHorizontal size={18} />
+                  </button>
+
+                  {openMenu === index && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow z-40">
+                      <div className="flex flex-col">
+                        {project.liveDemo ? (
+                          <a
+                            href={project.liveDemo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          >
+                            Live Demo
+                          </a>
+                        ) : (
+                          <button disabled className="px-3 py-2 text-sm text-gray-400">Live Demo</button>
+                        )}
+
+                        {project.github ? (
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          >
+                            GitHub
+                          </a>
+                        ) : (
+                          <button disabled className="px-3 py-2 text-sm text-gray-400">GitHub</button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
+
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
                 {project.title}
               </h3>

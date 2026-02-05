@@ -1,6 +1,6 @@
 import { Download } from 'lucide-react';
 import profilePic from '../Profile.png';
-import resumePdf from '../new_resu.pdf';
+import resumePdf from '../syedresume.pdf';
 
 function Hero() {
   return (
