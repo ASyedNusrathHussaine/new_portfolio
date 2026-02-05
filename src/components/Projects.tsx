@@ -96,7 +96,7 @@ function Projects() {
                   </button>
 
                   {openMenu === index && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow z-40">
+                    <div data-overflow-menu role="menu" className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow z-40">
                       <div className="flex flex-col">
                         {project.liveDemo ? (
                           <a
